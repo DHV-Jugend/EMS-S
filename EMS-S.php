@@ -4,7 +4,7 @@
 Plugin Name: Event Managment System Statistics
 author: Ingo Fleckenstein
 Description: Statistikerweiterung für EMS
-version: 1.00
+version: 1.01
 email: ingo@smallspotstone.de
 
 link: http://smallspotstone.de
@@ -45,15 +45,13 @@ function EMSS_Options(){
   $menu_slug  = 'EMS_Statistics';
   $function   = 'emss_options_page';
   $icon_url   = 'dashicons-admin-home';
-  $position   = 4;
+  $position   = 999;
 
-  add_menu_page( $page_title,
+  add_options_page( $page_title,
                  $menu_title, 
                  $capability, 
                  $menu_slug, 
-                 $function, 
-                 $icon_url, 
-                 $position );
+                 $function);
 } //Options for Admin Menu Page
 
 function emss_option_page_get($get){
@@ -285,19 +283,17 @@ function js_init() {
 
 add_shortcode('EMSS_Show_Statistics', 'EMSS_Show_Statistics_function');
 function EMSS_Show_Statistics_function($atts){
-	global $data, $errors, $tick;
+	global $data, $errors, $tick;	
 	$tick =microtime_float ();
 	$process_time =0;	
-//	$plz=98693;
-//	$str="http://api.zippopotam.us/de/$plz";
-//	$json = file_get_contents($str);
-//	$obj = json_decode($json);
 	
-//	echoerrors(__FILE__,__LINE__,array_key($obj));
+	if (!current_user_can('edit_posts')){
+  		return "<h1>Zugriff verweigert! Nur für Eventleiter!</h1>";
+ 	}
 		
 	$options =build_option_row_settings();
 	build_arrays();
-	//echoerrors(__FILE__,__LINE__,"Tock: ".round((microtime_float()-$tick), 2).' s</br>');
+	
 	$return_str = '';
 	$return_str .= add_category_menu($options);
 	

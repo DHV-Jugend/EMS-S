@@ -350,11 +350,26 @@ function EMS_get_Eventyear_by_Event_ID($id){
 	return $year;
 }
 
+function EMS_get_Eventdate_by_Event_ID($id){
+	global $data;
+	if (!isset($data['lists']['posts'][$id])){
+		myerrorlog(__FILE__. " " .__LINE__."Eventid $id was not found!");
+		return false;
+	}
+	if (!isset($data['lists']['posts'][$id]['year'])){
+		myerrorlog(__FILE__. " " .__LINE__."Get Year _ Eventid $id [year] was not found! ");
+		return false;
+	}
+	$date =$data['lists']['posts'][$id]['ems_start_date'];
+	
+	return $date;
+}
+
 function EMS_get_Eventname_by_Event_ID($id){
 	global $data;
-	$year =$data['lists']['posts'][$id]['post_titel '];
 	
-	return $year;
+	return $data['lists']['posts'][$id]['post_titel'];
+	
 }
 
 function array_key($array, $name ='origin', $n=0){

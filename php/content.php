@@ -884,17 +884,43 @@ function Content_newcomer(){
 	
 	// ------------Paint Canvas and get Chartdata ------------
 	$str ="<table><tr>";
-	$str .= get_comment_line(2, "Zählt alle Neulinge");
+	$str .= get_comment_line(2, "Zählt alle Neulinge --> gibt top Events zurück");
 	
 	$n=0;
-	$chartdata=[];
+	$tempchartdata=[];
 	foreach($data['user'] as $key => $event_user){
-		foreach($event_user['Events'] as $y => $event){
+		if (!isset($event_user['Events'])) continue;
+		if ($event_user['Events']==[]) continue;
 		
-			//echo array_key($event);
-			
+		$event=0;
+		$date=99999999999;
+		$firstyear=min(array_keys($event_user['Events']));
+		
+		foreach($event_user['Events'][$firstyear] as $eventid => $eventarray){
+			//echo (array_key($eventarray));
+			if ($eventarray['deleted']==1) continue;
+			$eventdate= EMS_get_Eventdate_by_Event_ID($eventid);
+			if ($eventdate<$date){
+				$event=$eventid;
+				$date=$eventdate;
+			}
 		}
+		//echo "Year: $firstyear --> ID: $event </br>";
+		if (!isset($tempchartdata[$firstyear])) $tempchartdata[$firstyear]=[];
+		if (!isset($tempchartdata[$firstyear][$event])) $tempchartdata[$firstyear][$event]=0;
+		$tempchartdata[$firstyear][$event]++;
+		
 	}
+	ksort($tempchartdata);
+	$chartdata=[];
+	foreach($tempchartdata as $y => $events){
+		arsort($events);
+		reset($events);
+		$name=EMS_get_Eventname_by_Event_ID(key($events));
+		$chartdata[$y.' - '.$name]=current($events);
+	}
+	
+	
 	arsort($chartdata);
 	$chartdata=array_slice($chartdata,0,20);
 	//echo(array_key($chartdata));
