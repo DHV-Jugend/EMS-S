@@ -15,9 +15,15 @@ $data=[];
 $tick=0;
 $errors=[];
 
-include 'php/content.php';
-include 'php/function.php';
-include 'php/array_build_functions.php';
+include __DIR__.'/php/content_functions.php';
+include __DIR__.'/php/content_creat_functions.php';
+include __DIR__.'/php/array_build_functions.php';
+include __DIR__.'/php/data_work_functions.php';
+include __DIR__.'/php/db_work_functions.php';
+include __DIR__.'/php/etc.php';
+
+
+
 register_uninstall_hook( __FILE__ , 'uninstall' );
 function uninstall(){
 	global $wpdb;
