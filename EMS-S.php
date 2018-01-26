@@ -532,11 +532,7 @@ function build_arrays(){
 			$request = urlencode ("https://api.genderize.io/?name=$name");
 			$jsonrequest =file_get_contents($request);
 			$url_array=(array)json_decode($jsonrequest,true);
-			if (isset($url_array['error'])){
-				$msg=$url_array['error'];
-				choerrors(__FILE__,__LINE__, "Keine datenabfrage möglich Server sagt: $msg");
-				$skip=true;
-			}
+			
 				
 			if($url_array['gender']===null){
 				insert2usermeta($user, 'emss_gender_accuracy', 100);
@@ -646,8 +642,7 @@ function build_arrays(){
 		
 	} 				// -------  $deregister --> data['user'][ $userid ]['Events'][ $year ][ $eventid ]['deleted']=true  --------------
 	//echoerrors(__FILE__,__LINE__,array_key($register, '$reg');
-	
-	
+		
 	foreach($register as $reg){
 		
 		if (knownissue('user', $reg['user'])){
@@ -713,14 +708,6 @@ function build_arrays(){
 	}// ------ Create lists of Interesting ID's of data-----
 	
 	
-	
-	//echoerrors(__FILE__,__LINE__,array_key($data['user'][231]['Events'][2017][2665]);
-	//echoerrors(__FILE__,__LINE__,array_key($deregister[100]);
-	//echoerrors(__FILE__,__LINE__,array_key($data['lists']['posts'][2764]);
-	//echoerrors(__FILE__,__LINE__,EMS_get_age_on_time_by_id(231);
-	
-	//echoerrors(__FILE__,__LINE__,serialize($data['usermeta'][1])."</br>";
-	//echoerrors(__FILE__,__LINE__,var_dump($EMR);
 	
 } //Get data vom DB and build data arrays 
  
