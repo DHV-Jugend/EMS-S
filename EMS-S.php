@@ -4,7 +4,7 @@
 Plugin Name: Event Managment System Statistics
 author: Ingo Fleckenstein
 Description: Statistikerweiterung für EMS
-version: 1.01
+version: 1.02
 email: ingo@smallspotstone.de
 
 link: http://smallspotstone.de
@@ -294,7 +294,7 @@ function EMSS_Show_Statistics_function($atts){
 	$process_time =0;	
 	
 	if (!current_user_can('edit_posts')){
-  		return "<h1>Zugriff verweigert! Nur für Eventleiter!</h1>";
+  		return "<h1>Zugriff verweigert! Nur für Eventleiter!</h1><a href='". wp_login_url( get_permalink() ) ."' title='Login'>Login</a>";
  	}
 		
 	$options =build_option_row_settings();
@@ -368,7 +368,7 @@ function build_arrays(){
 	{
 		$request1="SELECT user_id, event_id, data, deleted, create_date, modify_date ,delete_date FROM ".$table_EMS_Reg;
 		$request2="SELECT ID, post_title FROM ".$table_posts." WHERE post_type = 'ems_event' AND post_parent != '0'  ORDER BY `wp_posts`.`ID` ASC";
-		$request3="SELECT ID, user_registered FROM ".$table_users;
+		$request3="SELECT ID, user_email, user_registered FROM ".$table_users;
 		$request4="SELECT user_id, meta_key, meta_value FROM ".$table_usermeta." WHERE meta_key IN ('first_name', 'last_name', 'fum_birthday', 'fum_street', 'fum_city', 'fum_postcode', 'fum_state', 'fum_aircraft', 'fum_license_number', 'fum_premium_participant', 'fum_dhv_member_number', 'emss_fed_state', 'emss_gender', 'emss_gender_accuracy')";
 		$request5="SELECT time, user, event FROM $table_EMS_Reg_Log WHERE message = 'Added event registration.'";
 		$request6="SELECT time, user, event FROM $table_EMS_Reg_Log WHERE message = 'Deleted event registration.'";
@@ -438,7 +438,10 @@ function build_arrays(){
 	} 				// --------- $usermeta_temp --> $data['user'] -----------
 	
 	foreach($users as $row){
-		if(isset($data['user'][$row['ID']])) $data['user'][$row['ID']]['reg_date']= strtotime($row['user_registered']);
+		if(isset($data['user'][$row['ID']])) {
+			$data['user'][$row['ID']]['reg_date']= strtotime($row['user_registered']);
+			$data['user'][$row['ID']]['user_email'] = $row['user_email'];
+		}
 	} 						// -------  $users --> $data['user'] --------------
 	
 	foreach($data['user'] as $user => $userdata){
